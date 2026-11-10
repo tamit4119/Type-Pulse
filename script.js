@@ -13,6 +13,47 @@ function cleanQuote(text) {
   return text.replace(/[’‘]/g, "'").replace(/[“”]/g, '"').replace(/[—–]/g, "-");
 }
 
+function renderQuote(quoteText) {
+  quoteDisplayEle.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+
+  quoteText.split("").forEach((char, index) => {
+    const span = document.createElement("span");
+    span.textContent = char;
+    if (index === 0) {
+      span.classList.add("active");
+    }
+    fragment.appendChild(span);
+  });
+
+  quoteDisplayEle.appendChild(fragment);
+}
+
+function handleTyping() {
+  const charSpans = quoteDisplayEle.querySelectorAll("span");
+  const typedChars = typingInputEle.value.split("");
+
+  charSpans.forEach((charSpan, index) => {
+    const typedChar = typedChars[index];
+
+    charSpan.classList.remove("active");
+
+    if (typedChar === undefined) {
+      charSpan.classList.remove("correct", "incorrect");
+    } else if (typedChar === charSpan.textContent) {
+      charSpan.classList.add("correct");
+      charSpan.classList.remove("incorrect");
+    } else {
+      charSpan.classList.add("incorrect");
+      charSpan.classList.remove("correct");
+    }
+  });
+
+  if (typedChars.length < charSpans.length) {
+    charSpans[typedChars.length].classList.add("active");
+  }
+}
+
 async function getNewQuote() {
   quoteDisplayEle.textContent = "Loading quote...";
   let rawQuote = "";
@@ -28,11 +69,15 @@ async function getNewQuote() {
     rawQuote = FALLBACK_QUOTES[randomIndex];
   } finally {
     const cleanedQuote = cleanQuote(rawQuote);
-    quoteDisplayEle.textContent = cleanedQuote;
+    renderQuote(cleanedQuote);
     typingInputEle.value = "";
     typingInputEle.focus();
   }
 }
 
 restartButtonEle.addEventListener("click", getNewQuote);
+quoteDisplayEle.addEventListener("click", () => {
+  typingInputEle.focus();
+});
+typingInputEle.addEventListener("input", handleTyping);
 getNewQuote();

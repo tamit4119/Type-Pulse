@@ -4,6 +4,8 @@
   --text-untyped: #6c7086;
   --text-main: #cdd6f4;
   --accent: #89b4fa;
+  --text-correct: #a6e3a1;
+  --text-incorrect: #f38ba8;
 }
 * {
   margin: 0;
@@ -22,8 +24,13 @@ body {
   width: 90%;
   max-width: 800px;
 }
+header {
+  margin-bottom: 1.5rem;
+}
 .typing-arena {
   position: relative;
+  cursor: text;
+  margin-bottom: 1.5rem;
 }
 #quote-display {
   font-family: "Courier New", monospace;
@@ -35,4 +42,14 @@ body {
   position: absolute;
   opacity: 0;
   pointer-events: none;
+}
+#quote-display span.correct {
+  color: var(--text-correct);
+}
+#quote-display span.incorrect {
+  color: var(--text-incorrect);
+  text-decoration: underline;
+}
+#quote-display span.active {
+  border-left: 2px solid var(--accent);
 }
