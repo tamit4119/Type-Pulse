@@ -1,0 +1,38 @@
+:root {
+  --bg-primary: #1e1e2e;
+  --bg-secondary: #181825;
+  --text-untyped: #6c7086;
+  --text-main: #cdd6f4;
+  --accent: #89b4fa;
+}
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  background-color: var(--bg-primary);
+  color: var(--text-main);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+.app-container {
+  width: 90%;
+  max-width: 800px;
+}
+.typing-arena {
+  position: relative;
+}
+#quote-display {
+  font-family: "Courier New", monospace;
+  font-size: 1.5rem;
+  line-height: 1.6;
+  color: var(--text-untyped);
+}
+#typing-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}

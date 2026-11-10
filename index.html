@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Type Pulse</title>
+    <link rel="stylesheet" href="style.css" />
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <div class="app-container">
+      <header>
+        <h1>TypePulse</h1>
+        <div class="stats-bar">
+          <div class="stat-box">Time: <span id="time-left">60s</span></div>
+          <div class="stat-box">Speed: <span id="wpm">0</span></div>
+          <div class="stat-box">Accuracy: <span id="accuracy">100%</span></div>
+        </div>
+      </header>
+      <main>
+        <section class="typing-arena">
+          <div id="quote-display">Loading quote...</div>
+          <input
+            type="text"
+            id="typing-input"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="off"
+            spellcheck="false"
+            autofocus
+          />
+        </section>
+        <div class="controls">
+          <button id="restart-btn">New Quote</button>
+        </div>
+      </main>
+    </div>
+  </body>
+</html>
