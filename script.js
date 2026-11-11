@@ -1,9 +1,14 @@
+// 1. DOM Element References & Fallback Quotes
 const quoteDisplayEle = document.getElementById("quote-display");
-const restartButtonEle = document.getElementById("restart-btn");
+const restartBtnEle = document.getElementById("restart-btn");
 const typingInputEle = document.getElementById("typing-input");
 const timeLeftEle = document.getElementById("time-left");
 const wpmEle = document.getElementById("wpm");
 const accuracyEle = document.getElementById("accuracy");
+const bestWpmEle = document.getElementById("best-wpm");
+const themeBtnEle = document.getElementById("theme-btn");
+const soundBtnEle = document.getElementById("sound-btn");
+
 const FALLBACK_QUOTES = [
   "Success is not achieved overnight; it comes from consistent effort, patience, and the courage to keep moving forward.",
   "Every small step you take today brings you closer to the person you want to become tomorrow.",
@@ -12,11 +17,31 @@ const FALLBACK_QUOTES = [
   "Believe in your ability to improve, stay curious, and remember that progress is more important than perfection.",
 ];
 
-const MAX_TIME = 60;
-let timerInterval = null;
-let startTime = null;
-let isTestActive = false;
+// 2. Application State & localStorage Initialization
+const clickSound = new Audio("click.mp3");
+let isSoundEnabled = true;
 
+const MAX_TIME = 60;
+let timerInterval = null; // Stores setInterval ID to stop the clock cleanly
+let startTime = null; // Stores Date.now() timestamp of the first keystroke
+let isTestActive = false; // Ensures timer only starts once per test
+let currentWpm = 0;
+
+let bestWpm = Number(localStorage.getItem("typepulse_best_wpm")) || 0;
+let currentTheme = localStorage.getItem("typepulse_theme") || "dark";
+
+// Apply saved theme and high score on initial load
+document.documentElement.setAttribute("data-theme", currentTheme);
+themeBtnEle.textContent = `Theme: ${currentTheme === "dark" ? "Dark" : "Light"}`;
+bestWpmEle.textContent = bestWpm + " WPM";
+
+function playClickSound() {
+  if (!isSoundEnabled) return;
+  clickSound.currentTime = 0;
+  clickSound.play();
+}
+
+// 3. Timer & Stats Engine
 function resetTest() {
   clearInterval(timerInterval);
   isTestActive = false;
@@ -25,6 +50,7 @@ function resetTest() {
   wpmEle.textContent = "0 WPM";
   accuracyEle.textContent = "100%";
   typingInputEle.disabled = false;
+  currentWpm = 0;
   typingInputEle.focus();
 }
 
@@ -33,6 +59,13 @@ function endTest() {
   isTestActive = false;
   typingInputEle.disabled = true;
   updateStats();
+
+  // Save new high score to localStorage if current WPM beats previous record
+  if (currentWpm > bestWpm) {
+    bestWpm = currentWpm;
+    localStorage.setItem("typepulse_best_wpm", bestWpm);
+    bestWpmEle.textContent = bestWpm + " WPM";
+  }
 }
 
 function updateStats() {
@@ -43,8 +76,11 @@ function updateStats() {
   const correctChars = quoteDisplayEle.querySelectorAll("span.correct").length;
   const totalTyped = typingInputEle.value.length;
   const elapsedMinutes = (Date.now() - startTime) / 1000 / 60;
+
+  // Guard against first-millisecond division spike
   if (elapsedMinutes > 0.008) {
-    let wpm = Math.round((correctChars / 5) / elapsedMinutes);
+    let wpm = Math.round(correctChars / 5 / elapsedMinutes);
+    currentWpm = wpm;
     wpmEle.textContent = wpm + " WPM";
   }
 
@@ -73,12 +109,15 @@ function startTimer() {
   }, 1000);
 }
 
+// 4. Quote Cleaning, DOM Rendering & Keystroke Validation
 function cleanQuote(text) {
+  // Normalize curly apostrophes, quotes, and long dashes into standard keyboard characters
   return text.replace(/[’‘]/g, "'").replace(/[“”]/g, '"').replace(/[—–]/g, "-");
 }
 
 function renderQuote(quoteText) {
   quoteDisplayEle.innerHTML = "";
+  // Use DocumentFragment to batch all span insertions into a single DOM reflow
   const fragment = document.createDocumentFragment();
 
   quoteText.split("").forEach((char, index) => {
@@ -94,6 +133,7 @@ function renderQuote(quoteText) {
 }
 
 function handleTyping() {
+  playClickSound();
   if (!isTestActive && typingInputEle.value.length > 0) {
     startTimer();
   }
@@ -128,6 +168,7 @@ function handleTyping() {
   }
 }
 
+// 5. Async Quote Fetching & Event Listeners
 async function getNewQuote() {
   quoteDisplayEle.textContent = "Loading quote...";
   let rawQuote = "";
@@ -149,9 +190,22 @@ async function getNewQuote() {
   }
 }
 
-restartButtonEle.addEventListener("click", getNewQuote);
+soundBtnEle.addEventListener("click", () => {
+  isSoundEnabled = !isSoundEnabled;
+  soundBtnEle.textContent = isSoundEnabled === true ? "Sound: ON" : "Sound: OFF";
+  typingInputEle.focus();
+});
+themeBtnEle.addEventListener("click", () => {
+  currentTheme = currentTheme === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", currentTheme);
+  localStorage.setItem("typepulse_theme", currentTheme);
+  themeBtnEle.textContent = `Theme: ${currentTheme === "dark" ? "Dark" : "Light"}`;
+  typingInputEle.focus();
+});
+restartBtnEle.addEventListener("click", getNewQuote);
 quoteDisplayEle.addEventListener("click", () => {
   typingInputEle.focus();
 });
 typingInputEle.addEventListener("input", handleTyping);
+
 getNewQuote();

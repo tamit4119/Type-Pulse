@@ -5,21 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Type Pulse</title>
     <link rel="stylesheet" href="style.css" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>"
+    />
+    <!-- 'defer' downloads script.js in parallel and executes it after HTML parsing finishes -->
     <script src="script.js" defer></script>
   </head>
   <body>
     <div class="app-container">
+      <!-- Top Header & Real-Time Metrics Dashboard -->
       <header>
         <h1>TypePulse</h1>
         <div class="stats-bar">
           <div class="stat-box">Time: <span id="time-left">60s</span></div>
           <div class="stat-box">Speed: <span id="wpm">0 WPM</span></div>
           <div class="stat-box">Accuracy: <span id="accuracy">100%</span></div>
+          <div class="stat-box">Best: <span id="best-wpm">0 WPM</span></div>
         </div>
       </header>
+
+      <!-- Main Interactive Typing Workspace -->
       <main>
         <section class="typing-arena">
+          <!-- Container where individual character <span> tags are dynamically rendered -->
           <div id="quote-display">Loading quote...</div>
+
+          <!-- Hidden Input Trap: Captures keyboard events without showing a visible text box -->
           <input
             type="text"
             id="typing-input"
@@ -30,8 +42,12 @@
             autofocus
           />
         </section>
+
+        <!-- App Controls -->
         <div class="controls">
           <button id="restart-btn">New Quote</button>
+          <button id="sound-btn">Sound: ON</button>
+          <button id="theme-btn">Theme: Dark</button>
         </div>
       </main>
     </div>

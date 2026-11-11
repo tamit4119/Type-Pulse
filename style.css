@@ -1,3 +1,4 @@
+/* 1. Theme Variables (Dark Default & Light Override) */
 :root {
   --bg-primary: #1e1e2e;
   --bg-secondary: #181825;
@@ -7,6 +8,17 @@
   --text-correct: #a6e3a1;
   --text-incorrect: #f38ba8;
 }
+[data-theme="light"] {
+  --bg-primary: #eff1f5;
+  --bg-secondary: #e6e9ef;
+  --text-untyped: #8c8fa1;
+  --text-main: #4c4f69;
+  --accent: #1e66f5;
+  --text-correct: #40a02b;
+  --text-incorrect: #d20f39;
+}
+
+/* 2. Global Reset & Base Layout */
 * {
   margin: 0;
   padding: 0;
@@ -19,6 +31,9 @@ body {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
+  transition:
+    background-color 0.25s,
+    color 0.25s;
 }
 .app-container {
   width: 90%;
@@ -27,6 +42,8 @@ body {
 header {
   margin-bottom: 1.5rem;
 }
+
+/* 3. Typing Arena & Character States */
 .typing-arena {
   position: relative;
   cursor: text;
@@ -38,6 +55,7 @@ header {
   line-height: 1.6;
   color: var(--text-untyped);
 }
+/* Hides input visually while keeping it focusable; pointer-events: none prevents blocking clicks */
 #typing-input {
   position: absolute;
   opacity: 0;
@@ -53,6 +71,8 @@ header {
 #quote-display span.active {
   border-left: 2px solid var(--accent);
 }
+
+/* 4. Stats Bar & Controls */
 .stats-bar {
   display: flex;
   justify-content: space-between;
@@ -64,4 +84,24 @@ header {
 }
 .stat-box span {
   color: var(--accent);
+}
+.controls {
+  display: flex;
+  gap: 1rem;
+}
+.controls button {
+  background-color: var(--bg-secondary);
+  color: var(--text-main);
+  border: 1px solid var(--accent);
+  padding: 0.6rem 1.2rem;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    color 0.2s;
+}
+.controls button:hover {
+  background-color: var(--accent);
+  color: var(--bg-primary);
 }
