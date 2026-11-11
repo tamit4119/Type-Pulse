@@ -190,6 +190,14 @@ async function getNewQuote() {
   }
 }
 
+typingInputEle.addEventListener("paste", (e) => {
+  e.preventDefault();
+});
+document.addEventListener("keydown", (e) => {
+  if (e.key === "Escape") {
+    getNewQuote();
+  }
+});
 soundBtnEle.addEventListener("click", () => {
   isSoundEnabled = !isSoundEnabled;
   soundBtnEle.textContent = isSoundEnabled === true ? "Sound: ON" : "Sound: OFF";

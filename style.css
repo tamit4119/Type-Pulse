@@ -25,6 +25,13 @@
   box-sizing: border-box;
 }
 body {
+  font-family:
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    Roboto,
+    sans-serif;
   background-color: var(--bg-primary);
   color: var(--text-main);
   display: flex;
@@ -54,6 +61,7 @@ header {
   font-size: 1.5rem;
   line-height: 1.6;
   color: var(--text-untyped);
+  user-select: none;
 }
 /* Hides input visually while keeping it focusable; pointer-events: none prevents blocking clicks */
 #typing-input {
@@ -68,8 +76,17 @@ header {
   color: var(--text-incorrect);
   text-decoration: underline;
 }
-#quote-display span.active {
+.typing-arena:focus-within #quote-display span.active {
   border-left: 2px solid var(--accent);
+  animation: blink 1s infinite;
+}
+@keyframes blink {
+  0%, 100% {
+    border-color: var(--accent);
+  }
+  50% {
+    border-color: transparent;
+  }
 }
 
 /* 4. Stats Bar & Controls */
